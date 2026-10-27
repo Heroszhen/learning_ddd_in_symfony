@@ -1,0 +1,12 @@
+DDD
+Le DDD (Domain-Driven Design) est une approche qui organise le code autour du métier (le domaine) plutôt qu’autour du framework. Dans un projet Symfony, cela consiste à sortir de la structure par défaut (Controller/, Entity/, Repository/…) pour découper le code en couches et en contextes métier. 
+
+---structure
+-Domain:	le cœur métier : les objets et leurs règles (ex. « on ne débite pas plus que le solde »)
+-Application:	les handlers qui exécutent les commandes et les requêtes
+-Infrastructure:	la technique : base de données, SQL, e-mails…
+-Api:	ce qui est exposé en HTTP : ressources, voters (droits d’accès)
+
+
+---tests unitaires
+Domain → Application → UI → Infrastructure.

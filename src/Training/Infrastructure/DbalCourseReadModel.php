@@ -18,7 +18,6 @@ final readonly class DbalCourseReadModel implements ICourseReadModel
     public function findByFilters(array $filters): array
     {
         $page = (int) max(1, $filters['page'] ?? 1);
-        $page = "ab";
         $sql = 'SELECT id, name, places, student_ids
                 FROM Course
                 ORDER BY id
