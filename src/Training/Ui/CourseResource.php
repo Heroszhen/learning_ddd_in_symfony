@@ -2,21 +2,30 @@
 
 declare(strict_types=1);
 
-namespace App\Library\Ui;
+namespace App\Training\Ui;
 
+use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Post;
+use App\Training\Ui\CourseRegistryInput;
+use App\Training\Ui\CourseRegistryProcessor;
 
 #[ApiResource(
+    normalizationContext: ['groups' => ['course:read']],
     operations: [
+        new GetCollection(
+            uriTemplate: '/courses',
+            security: "is_granted('ROLE_ADMIN')",
+        ),
         new Post(
-            uriTemplate: '/courses/{id}/register',
+            uriTemplate: '/courses/{id}/registry',
             uriVariables: ['id'],
             read: false,
             output: false,
+            processor: CourseRegistryProcessor::class,
             status: 204,
-            input: BookBorrowInput::class,
-            security: "is_granted('BOOK_LEND')",
+            input: CourseRegistryInput::class,
+            security: "is_granted('COURSE_REGISTRY')",
         ),
     ]
 )]
