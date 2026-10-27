@@ -37,7 +37,7 @@ final class CourseFactory extends PersistentObjectFactory
         return [
             'id' => Uuid::v7()->toRfc4122(),
             'name' => self::faker()->unique()->words(3, true),
-            'places' => self::faker()->numberBetween(2, 20),
+            'places' => self::faker()->numberBetween(2, 10),
         ];
     }
 

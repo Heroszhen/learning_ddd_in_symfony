@@ -11,11 +11,11 @@ use App\Training\Ui\CourseRegistryInput;
 use App\Training\Ui\CourseRegistryProcessor;
 
 #[ApiResource(
-    normalizationContext: ['groups' => ['course:read']],
     operations: [
         new GetCollection(
             uriTemplate: '/courses',
-            security: "is_granted('ROLE_ADMIN')",
+            security: "is_granted('ROLE_USER')",
+            provider: CourseProvider::class
         ),
         new Post(
             uriTemplate: '/courses/{id}/registry',
