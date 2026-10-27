@@ -55,4 +55,17 @@ class Course
 
         return new self($id, $name, $places);
     }
+
+    public function addStudent(string $studentId): void
+    {
+        if (in_array($studentId, $this->studentIds, true)) {
+            throw new \DomainException('Already registered');
+        }
+
+        if (count($this->studentIds) >= $this->places) {
+            throw new \DomainException('No places');
+        }
+
+        $this->studentIds[] = $studentId;
+    }
 }
