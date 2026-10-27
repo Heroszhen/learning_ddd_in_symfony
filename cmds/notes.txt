@@ -10,3 +10,4 @@ Le DDD (Domain-Driven Design) est une approche qui organise le code autour du m�
 
 ---tests unitaires
 Domain → Application → UI → Infrastructure.
+php vendor/bin/phpunit tests

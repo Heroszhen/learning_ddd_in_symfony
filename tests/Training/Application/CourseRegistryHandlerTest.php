@@ -45,4 +45,77 @@ class CourseRegistryHandlerTest extends TestCase
             ],
         ];
     }
+
+    #[DataProvider('studentsInCoursProvider')]
+    public function testStudentsInCourse(Student $student, Course $course): void
+    {
+        $course->addStudent($student->getId());
+
+        $studentRepository = $this->createStub(IStudentRepository::class);
+        $studentRepository->method('get')->willReturn($student);
+
+        $courseRepository = $this->createMock(ICourseRepository::class);
+        $courseRepository->method('get')->willReturn($course);
+        $courseRepository->expects(self::never())->method('save')->with($course);
+
+        $handler = new CourseRegistryHandler($studentRepository, $courseRepository);
+
+        $this->expectException(\DomainException::class);
+
+        $handler(new CourseRegistry($student->getId(), $course->getId()));
+    }
+
+    public static function studentsInCoursProvider(): array
+    {
+        return [
+            [
+                Student::create('3', 'student3'),
+                Course::create('3', 'course3')
+            ],
+        ];
+    }
+
+    #[DataProvider('CoursNotFreeProvider')]
+    public function testCourseNotFree(Student $student, Course $course): void
+    {
+        $course->addStudent('6');
+
+        $studentRepository = $this->createStub(IStudentRepository::class);
+        $studentRepository->method('get')->willReturn($student);
+
+        $courseRepository = $this->createMock(ICourseRepository::class);
+        $courseRepository->method('get')->willReturn($course);
+        $courseRepository->expects(self::never())->method('save')->with($course);
+
+        $handler = new CourseRegistryHandler($studentRepository, $courseRepository);
+
+        $this->expectException(\DomainException::class);
+
+        $handler(new CourseRegistry($student->getId(), $course->getId()));
+    }
+
+    public static function CoursNotFreeProvider(): array
+    {
+        return [
+            [
+                Student::create('4', 'student4'),
+                Course::create('4', 'course4', 1)
+            ],
+        ];
+    }
+
+    public function testUnknownStudent(): void
+    {
+        $studentRepository = $this->createStub(IStudentRepository::class);
+        $studentRepository->method('get')->willThrowException(new \RuntimeException('Student not found'));
+
+        $courseRepository = $this->createMock(ICourseRepository::class);
+        $courseRepository->expects(self::never())->method('save');
+
+        $handler = new CourseRegistryHandler($studentRepository, $courseRepository);
+
+        $this->expectException(\RuntimeException::class);
+
+        $handler(new CourseRegistry('1', '2'));
+    }
 }
