@@ -25,7 +25,7 @@ class CourseProvider implements ProviderInterface
     {
         $filters = $context['filters'] ?? [];
         $tab =  $this->handle(new CourseView($filters));
-        $page = (int) $filters['page'] ?? 1;
+        $page = (int) max(1, $filters['page'] ?? 1);
 
         return new TraversablePaginator(
             new \ArrayIterator($tab['courses']),
